@@ -62,19 +62,15 @@ function Footer() {
             <h4 className="font-bold mb-4 text-accent font-dmsans">Legal</h4>
             <ul className="space-y-2 text-sm text-gray-400 font-dmsans">
               <li>
-                <button className="hover:text-accent transition">
+                <Link to="/privacy-policy" className="hover:text-accent transition">
                   Privacy Policy
-                </button>
+                </Link>
               </li>
               <li>
-                <button className="hover:text-accent transition">
-                  Terms of Service
-                </button>
+                <span className="text-gray-500">Terms of Service (coming soon)</span>
               </li>
               <li>
-                <button className="hover:text-accent transition">
-                  Cookie Policy
-                </button>
+                <span className="text-gray-500">Cookie Policy</span>
               </li>
             </ul>
           </div>

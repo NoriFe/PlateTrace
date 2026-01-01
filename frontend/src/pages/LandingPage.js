@@ -120,7 +120,7 @@ function LandingPage({ isLoggedIn }) {
             <div>
               <h3 className="text-2xl font-bold text-white mb-3 font-dmsans">What is PlateTrace?</h3>
               <p className="text-gray-300 text-lg font-dmsans">
-                PlateTrace is a vehicle license plate detection and tracking system. It uses AI-powered image recognition to detect license plates from images, automatically extract the plate text, and help you manage vehicle data in a centralized dashboard.
+                PlateTrace is a vehicle license plate detection and tracking system. It uses AI-powered image recognition to detect license plates from images, automatically extract the plate text, and help you manage vehicle data in a centralised dashboard.
               </p>
             </div>
 
