@@ -1,32 +1,100 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
+// Components
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
+import Dashboard from './pages/Dashboard';
+
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  // Check if user is already logged in on mount
+  useEffect(() => {
+    const storedUserRaw = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (storedUserRaw) {
+      try {
+        const userData = JSON.parse(storedUserRaw);
+        const name = userData.email || userData.username || 'User';
+        if (token || name) {
+          setIsLoggedIn(true);
+          setUserName(name);
+        }
+      } catch (e) {
+        // ignore malformed storage
+      }
+    }
+  }, []);
+
+  const handleLogin = (user) => {
+    const name = (user && (user.email || user.username)) || user || 'User';
+    setIsLoggedIn(true);
+    setUserName(name);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserName('');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  };
+
+  // Protected route wrapper
+  const ProtectedRoute = ({ children }) => {
+    return isLoggedIn ? children : <Navigate to="/login" />;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <img src={logo} className="h-24 mx-auto mb-6 animate-spin" alt="logo" />
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">PlateTrace</h1>
-          <p className="text-xl text-gray-600 mb-8">
-            ✅ Tailwind CSS is working perfectly!
-          </p>
-          <div className="space-y-4">
-            <p className="text-gray-700">
-              Edit <code className="bg-gray-200 px-2 py-1 rounded">src/App.js</code> and save to see changes.
-            </p>
-            <a
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </div>
-        </div>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Navbar 
+          isLoggedIn={isLoggedIn} 
+          onLogout={handleLogout} 
+          userName={userName}
+        />
+        
+        <main className="flex-grow">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage isLoggedIn={isLoggedIn} />} />
+            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+            <Route path="/register" element={<RegisterPage onLogin={handleLogin} />} />
+
+            {/* Protected Routes */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <ProfilePage userName={userName} />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* Redirect unknown routes to home */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </main>
+
+        <Footer />
       </div>
-    </div>
+    </Router>
   );
 }
 
