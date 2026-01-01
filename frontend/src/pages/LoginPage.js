@@ -18,7 +18,7 @@ function LoginPage({ onLogin }) {
       const response = await fetch('http://localhost:8000/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, username: email, password }),
       });
 
       if (response.ok) {
@@ -35,7 +35,14 @@ function LoginPage({ onLogin }) {
         onLogin(userPayload);
         navigate('/dashboard');
       } else {
-        setError('Invalid email or password');
+        let msg = 'Invalid email or password';
+        try {
+          const errBody = await response.json();
+          msg = errBody.detail || errBody.message || msg;
+        } catch (e) {
+          // ignore
+        }
+        setError(msg);
       }
     } catch (err) {
       setError('Connection error. Please try again.');
