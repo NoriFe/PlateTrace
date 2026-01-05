@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import Dashboard from './pages/Dashboard';
+import UploadPage from './pages/UploadPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 
 function App() {
@@ -25,7 +26,12 @@ function App() {
     if (storedUserRaw) {
       try {
         const userData = JSON.parse(storedUserRaw);
-        const name = userData.email || userData.username || 'User';
+        let name = 'User';
+        if (userData.first_name && userData.last_name) {
+          name = `${userData.first_name} ${userData.last_name}`;
+        } else if (userData.email || userData.username) {
+          name = userData.email || userData.username;
+        }
         if (token || name) {
           setIsLoggedIn(true);
           setUserName(name);
@@ -37,7 +43,12 @@ function App() {
   }, []);
 
   const handleLogin = (user) => {
-    const name = (user && (user.email || user.username)) || user || 'User';
+    let name = 'User';
+    if (user && user.first_name && user.last_name) {
+      name = `${user.first_name} ${user.last_name}`;
+    } else if (user && (user.email || user.username)) {
+      name = user.email || user.username;
+    }
     setIsLoggedIn(true);
     setUserName(name);
   };
@@ -67,8 +78,8 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage isLoggedIn={isLoggedIn} />} />
-            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-            <Route path="/register" element={<RegisterPage onLogin={handleLogin} />} />
+            <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
+            <Route path="/register" element={isLoggedIn ? <Navigate to="/dashboard" /> : <RegisterPage onLogin={handleLogin} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
             {/* Protected Routes */}
@@ -77,6 +88,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/upload" 
+              element={
+                <ProtectedRoute>
+                  <UploadPage />
                 </ProtectedRoute>
               } 
             />

@@ -32,6 +32,7 @@ function LoginPage({ onLogin }) {
         // Store user info and token
         localStorage.setItem('user', JSON.stringify(userPayload));
         localStorage.setItem('token', data.token || '');
+        localStorage.setItem('user_id', data.user_id || '');
         onLogin(userPayload);
         navigate('/dashboard');
       } else {
