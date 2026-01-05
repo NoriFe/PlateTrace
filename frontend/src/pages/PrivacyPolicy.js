@@ -13,7 +13,7 @@ function PrivacyPolicy() {
         <section className="space-y-2">
           <h2 className="text-2xl font-bold text-white font-dmsans">Who we are</h2>
           <p className="text-gray-300 font-dmsans">
-            PlateTrace is provided as a demonstration of vehicle plate recognition for educational and small-business use. For any privacy questions, contact <span className="text-accent">privacy@platetrace.local</span>.
+            PlateTrace is provided as a demonstration of vehicle plate recognition for educational and small business use. For any privacy questions, contact <span className="text-accent">privacy@platetrace.local</span>.
           </p>
         </section>
 
@@ -21,8 +21,8 @@ function PrivacyPolicy() {
           <h2 className="text-2xl font-bold text-white font-dmsans">Data we collect</h2>
           <ul className="list-disc list-inside text-gray-300 font-dmsans space-y-1">
             <li>Account data: email, username, first and last name.</li>
-            <li>Authentication data: hashed passwords (never stored in plain text).</li>
-            <li>Usage data: uploaded images, extracted plate numbers, timestamps, and basic app activity.</li>
+            <li>Authentication data: hashed passwords.</li>
+            <li>Usage data: uploaded images, extracted plate numbers, timestamps and basic app activity.</li>
             <li>Technical data: IP address and browser details for security and debugging.</li>
           </ul>
         </section>
@@ -32,7 +32,7 @@ function PrivacyPolicy() {
           <ul className="list-disc list-inside text-gray-300 font-dmsans space-y-1">
             <li>To provide and secure login and account access.</li>
             <li>To process uploads, run OCR on plates, and store results.</li>
-            <li>To maintain logs for troubleshooting, abuse prevention, and service integrity.</li>
+            <li>To maintain logs for troubleshooting, abuse prevention and service integrity.</li>
           </ul>
         </section>
 
@@ -49,7 +49,7 @@ function PrivacyPolicy() {
           <h2 className="text-2xl font-bold text-white font-dmsans">Sharing and storage</h2>
           <ul className="list-disc list-inside text-gray-300 font-dmsans space-y-1">
             <li>Data is stored in Supabase (PostgreSQL) in the EU region.</li>
-            <li>We do not sell personal data. Sharing is limited to service providers supporting hosting, storage, security, and logging.</li>
+            <li>We do not sell personal data. Sharing is limited to service providers supporting hosting, storage, security and logging.</li>
             <li>Data is retained only as long as needed for the stated purposes or to meet legal requirements.</li>
           </ul>
         </section>
@@ -57,7 +57,7 @@ function PrivacyPolicy() {
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white font-dmsans">Your rights</h2>
           <p className="text-gray-300 font-dmsans">
-            Under UK GDPR you can request access, correction, deletion, restriction, and data portability. You may also object to processing or withdraw consent where applicable. To exercise your rights, email <span className="text-accent">privacy@platetrace.local</span>.
+            Under UK GDPR you can request access, correction, deletion, restriction and data portability. You may also object to processing or withdraw consent where applicable. To exercise your rights, email <span className="text-accent">privacy@platetrace.local</span>.
           </p>
         </section>
 
@@ -71,7 +71,7 @@ function PrivacyPolicy() {
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white font-dmsans">Security</h2>
           <p className="text-gray-300 font-dmsans">
-            We use industry-standard measures such as HTTPS, hashed passwords, and access controls. No system is perfectly secure; please use strong, unique passwords and contact us if you suspect an issue.
+            We use industry standard measures such as HTTPS, hashed passwords, and access controls. No system is perfectly secure; please use strong, unique passwords and contact us if you suspect an issue.
           </p>
         </section>
 
