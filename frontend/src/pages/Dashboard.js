@@ -12,6 +12,7 @@ function Dashboard() {
     vehicles: 0,
     detectionsToday: 0
   });
+  const [recentPlates, setRecentPlates] = useState([]);
 
   const fetchStats = async () => {
     try {
@@ -24,6 +25,9 @@ function Dashboard() {
       });
       const platesData = await platesRes.json();
       const platesTracked = platesData.count || 0;
+      
+      // Store recent plates (last 10)
+      setRecentPlates(platesData.plates ? platesData.plates.slice(0, 10) : []);
 
       // Fetch vehicles
       const vehiclesRes = await fetch(`http://localhost:8000/users/${userId}/vehicles`, {
@@ -130,44 +134,47 @@ function Dashboard() {
         </p>
       </div>
 
-      {/* Stats Section */}
-      <h2 className="text-2xl font-bold text-white mb-4 font-dmsans">Your Activity</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {/* Stats Card 1 */}
-        <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 p-3.5 hover:border-accent transition">
-          <h3 className="text-accent text-[11px] font-bold mb-1 font-dmsans uppercase tracking-wide">Plates Tracked</h3>
-          <p className="text-[26px] font-bold text-white font-dmsans">{stats.platesTracked}</p>
-        </div>
+      {/* Upload Button */}
+      <div className="mb-8">
+        <button onClick={handleUploadClick} className="bg-accent hover:bg-accent-600 text-bg font-bold py-3 px-6 rounded-lg transition shadow-inner-light font-dmsans text-lg">
+          📸 Upload Image
+        </button>
+      </div>
 
-        {/* Stats Card 2 */}
-        <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 p-3.5 hover:border-accent transition">
-          <h3 className="text-accent text-[11px] font-bold mb-1 font-dmsans uppercase tracking-wide">Vehicles</h3>
-          <p className="text-[26px] font-bold text-white font-dmsans">{stats.vehicles}</p>
-        </div>
-
-        {/* Stats Card 3 */}
-        <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 p-3.5 hover:border-accent transition">
-          <h3 className="text-accent text-[11px] font-bold mb-1 font-dmsans uppercase tracking-wide">Detections Today</h3>
-          <p className="text-[26px] font-bold text-white font-dmsans">{stats.detectionsToday}</p>
-        </div>
+      {/* Recent Detections */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold text-white mb-4 font-dmsans">Your Activity</h2>
+        {recentPlates.length > 0 ? (
+          <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-800 border-b-2 border-accent/30">
+                <tr>
+                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Plate Number</th>
+                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800">
+                {recentPlates.map((plate, index) => (
+                  <tr key={index} className="hover:bg-gray-800 transition">
+                    <td className="px-6 py-4 text-white font-bold font-dmsans text-lg">{plate.plate_number}</td>
+                    <td className="px-6 py-4 text-gray-300 font-dmsans">
+                      {new Date(plate.timestamp).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 p-8 text-center">
+            <p className="text-gray-400 font-dmsans text-lg">No detections yet. Upload an image to get started!</p>
+          </div>
+        )}
       </div>
 
       {/* Connection Test */}
       <div className="mt-8">
         <ConnectionTest />
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mt-7">
-        <h2 className="text-xl font-bold text-accent mb-4 font-dmsans">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <button onClick={handleUploadClick} className="bg-accent hover:bg-accent-600 text-bg font-bold py-2 rounded-lg transition shadow-inner-light font-dmsans text-sm">
-            📸 Upload Image
-          </button>
-          <button className="border-2 border-accent text-accent hover:bg-accent hover:text-bg font-bold py-2 rounded-lg transition font-dmsans text-sm">
-            🚗 Add Vehicle
-          </button>
-        </div>
       </div>
 
       {/* Upload Modal */}
