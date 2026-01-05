@@ -111,6 +111,30 @@ function Dashboard() {
     }
   };
 
+  const handleDelete = async (plateId) => {
+    if (!plateId) return;
+    try {
+      const userId = localStorage.getItem('user_id');
+      const response = await fetch(`http://localhost:8000/users/${userId}/plates/${plateId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (response.ok) {
+        // Optimistically update UI by filtering out the deleted item
+        setRecentPlates(prev => prev.filter(plate => plate.read_id !== plateId));
+        
+        // Update stats count
+        setStats(prev => ({
+          ...prev,
+          platesTracked: Math.max(0, prev.platesTracked - 1)
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to delete plate read', err);
+    }
+  };
+
   const handleUploadClick = () => {
     setShowUploadModal(true);
     setResult(null);
@@ -149,16 +173,38 @@ function Dashboard() {
             <table className="w-full">
               <thead className="bg-gray-800 border-b-2 border-accent/30">
                 <tr>
-                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Plate Number</th>
+                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Plate</th>
+                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Owner</th>
+                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Vehicle</th>
+                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Location</th>
                   <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Timestamp</th>
+                  <th className="text-right px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
-                {recentPlates.map((plate, index) => (
-                  <tr key={index} className="hover:bg-gray-800 transition">
+                {recentPlates.map((plate) => (
+                  <tr key={plate.read_id || `${plate.plate_number}-${plate.timestamp}`}
+                      className="hover:bg-gray-800 transition">
                     <td className="px-6 py-4 text-white font-bold font-dmsans text-lg">{plate.plate_number}</td>
+                    <td className="px-6 py-4 text-gray-300 font-dmsans">{plate.owner ? plate.owner.name : '-'}</td>
                     <td className="px-6 py-4 text-gray-300 font-dmsans">
-                      {new Date(plate.timestamp).toLocaleString()}
+                      {plate.vehicle ? `${plate.vehicle.make} ${plate.vehicle.model} (${plate.vehicle.color || ''})` : '-'}
+                    </td>
+                    <td className="px-6 py-4 text-gray-300 font-dmsans">
+                      {plate.location ? plate.location.name || plate.location_id : '-'}
+                    </td>
+                    <td className="px-6 py-4 text-gray-300 font-dmsans text-sm">
+                      {plate.timestamp ? new Date(plate.timestamp).toLocaleString() : '-'}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => handleDelete(plate.read_id)}
+                        disabled={!plate.read_id}
+                        className="text-red-400 hover:text-red-300 font-bold font-dmsans disabled:opacity-40 text-2xl"
+                        aria-label="Delete entry"
+                      >
+                        ×
+                      </button>
                     </td>
                   </tr>
                 ))}
