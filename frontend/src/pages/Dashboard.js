@@ -169,47 +169,101 @@ function Dashboard() {
       <div className="mt-8">
         <h2 className="text-2xl font-bold text-white mb-4 font-dmsans">Your Activity</h2>
         {recentPlates.length > 0 ? (
-          <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-800 border-b-2 border-accent/30">
-                <tr>
-                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Plate</th>
-                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Owner</th>
-                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Vehicle</th>
-                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Location</th>
-                  <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Timestamp</th>
-                  <th className="text-right px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-800">
-                {recentPlates.map((plate) => (
-                  <tr key={plate.read_id || `${plate.plate_number}-${plate.timestamp}`}
-                      className="hover:bg-gray-800 transition">
-                    <td className="px-6 py-4 text-white font-bold font-dmsans text-lg">{plate.plate_number}</td>
-                    <td className="px-6 py-4 text-gray-300 font-dmsans">{plate.owner ? plate.owner.name : '-'}</td>
-                    <td className="px-6 py-4 text-gray-300 font-dmsans">
-                      {plate.vehicle ? `${plate.vehicle.make} ${plate.vehicle.model} (${plate.vehicle.color || ''})` : '-'}
-                    </td>
-                    <td className="px-6 py-4 text-gray-300 font-dmsans">
-                      {plate.location ? plate.location.name || plate.location_id : '-'}
-                    </td>
-                    <td className="px-6 py-4 text-gray-300 font-dmsans text-sm">
-                      {plate.timestamp ? new Date(plate.timestamp).toLocaleString() : '-'}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => handleDelete(plate.read_id)}
-                        disabled={!plate.read_id}
-                        className="text-red-400 hover:text-red-300 font-bold font-dmsans disabled:opacity-40 text-2xl"
-                        aria-label="Delete entry"
-                      >
-                        ×
-                      </button>
-                    </td>
+          <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-800 border-b-2 border-accent/30">
+                  <tr>
+                    <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Plate</th>
+                    <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Owner</th>
+                    <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Vehicle</th>
+                    <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Location</th>
+                    <th className="text-left px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Timestamp</th>
+                    <th className="text-right px-6 py-3 text-accent font-bold font-dmsans text-sm uppercase tracking-wide">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-800">
+                  {recentPlates.map((plate) => (
+                    <tr key={plate.read_id || `${plate.plate_number}-${plate.timestamp}`}
+                        className="hover:bg-gray-800 transition">
+                      <td className="px-6 py-4 text-white font-bold font-dmsans text-lg">{plate.plate_number}</td>
+                      <td className="px-6 py-4 text-gray-300 font-dmsans">{plate.owner ? plate.owner.name : '-'}</td>
+                      <td className="px-6 py-4 text-gray-300 font-dmsans">
+                        {plate.vehicle ? `${plate.vehicle.make} ${plate.vehicle.model} (${plate.vehicle.color || ''})` : '-'}
+                      </td>
+                      <td className="px-6 py-4 text-gray-300 font-dmsans">
+                        {plate.location ? plate.location.name || plate.location_id : '-'}
+                      </td>
+                      <td className="px-6 py-4 text-gray-300 font-dmsans text-sm">
+                        {plate.timestamp ? new Date(plate.timestamp).toLocaleString() : '-'}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => handleDelete(plate.read_id)}
+                          disabled={!plate.read_id}
+                          className="text-red-400 hover:text-red-300 font-bold font-dmsans disabled:opacity-40 text-2xl"
+                          aria-label="Delete entry"
+                        >
+                          ×
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-4 p-4">
+              {recentPlates.map((plate) => (
+                <div
+                  key={plate.read_id || `${plate.plate_number}-${plate.timestamp}`}
+                  className="bg-gray-800 border border-accent/30 rounded-lg p-4 space-y-2"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-xs text-gray-400 font-dmsans uppercase">Plate</p>
+                      <p className="text-white font-bold font-dmsans text-lg">{plate.plate_number}</p>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(plate.read_id)}
+                      disabled={!plate.read_id}
+                      className="text-red-400 hover:text-red-300 font-bold font-dmsans disabled:opacity-40 text-2xl"
+                      aria-label="Delete entry"
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400 font-dmsans uppercase">Owner</p>
+                    <p className="text-gray-300 font-dmsans">{plate.owner ? plate.owner.name : '-'}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400 font-dmsans uppercase">Vehicle</p>
+                    <p className="text-gray-300 font-dmsans text-sm">
+                      {plate.vehicle ? `${plate.vehicle.make} ${plate.vehicle.model} (${plate.vehicle.color || ''})` : '-'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400 font-dmsans uppercase">Location</p>
+                    <p className="text-gray-300 font-dmsans">
+                      {plate.location ? plate.location.name || plate.location_id : '-'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400 font-dmsans uppercase">Timestamp</p>
+                    <p className="text-gray-300 font-dmsans text-xs">
+                      {plate.timestamp ? new Date(plate.timestamp).toLocaleString() : '-'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="bg-gray-900 border-2 border-accent/50 rounded-lg shadow-lg shadow-accent/20 p-8 text-center">

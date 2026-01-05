@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-function Navbar({ isLoggedIn, onLogout, userName }) {
+function Navbar({ isLoggedIn, onLogout, userName, isAdmin }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +32,11 @@ function Navbar({ isLoggedIn, onLogout, userName }) {
                   <Link to="/profile" className="hover:text-accent transition font-semibold">
                     Profile
                   </Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="hover:text-accent transition font-semibold">
+                      Admin
+                    </Link>
+                  )}
                   <span className="text-xs text-gray-300 whitespace-nowrap">Welcome, {userName}!</span>
                   <button
                     onClick={handleLogout}
@@ -85,6 +90,11 @@ function Navbar({ isLoggedIn, onLogout, userName }) {
                 <Link to="/profile" className="block hover:text-accent py-2 transition font-dmsans">
                   Profile
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin" className="block hover:text-accent py-2 transition font-dmsans">
+                    Admin
+                  </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded transition font-dmsans text-sm font-bold"

@@ -28,11 +28,13 @@ function LoginPage({ onLogin }) {
           username: data.username || email,
           first_name: data.first_name,
           last_name: data.last_name,
+          is_admin: data.is_admin || false,
         };
         // Store user info and token
         localStorage.setItem('user', JSON.stringify(userPayload));
         localStorage.setItem('token', data.token || '');
         localStorage.setItem('user_id', data.user_id || '');
+        localStorage.setItem('is_admin', data.is_admin ? 'true' : 'false');
         onLogin(userPayload);
         navigate('/dashboard');
       } else {

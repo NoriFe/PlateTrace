@@ -11,6 +11,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
+import Admin from './pages/Admin';
 import Dashboard from './pages/Dashboard';
 import UploadPage from './pages/UploadPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -18,11 +19,13 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Check if user is already logged in on mount
   useEffect(() => {
     const storedUserRaw = localStorage.getItem('user');
     const token = localStorage.getItem('token');
+    const storedIsAdmin = localStorage.getItem('is_admin');
     if (storedUserRaw) {
       try {
         const userData = JSON.parse(storedUserRaw);
@@ -35,6 +38,7 @@ function App() {
         if (token || name) {
           setIsLoggedIn(true);
           setUserName(name);
+          setIsAdmin(storedIsAdmin === 'true');
         }
       } catch (e) {
         // ignore malformed storage
@@ -51,18 +55,27 @@ function App() {
     }
     setIsLoggedIn(true);
     setUserName(name);
+    setIsAdmin(!!user?.is_admin);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserName('');
+    setIsAdmin(false);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('is_admin');
   };
 
   // Protected route wrapper
   const ProtectedRoute = ({ children }) => {
     return isLoggedIn ? children : <Navigate to="/login" />;
+  };
+
+  // Admin-protected route wrapper
+  const AdminRoute = ({ children }) => {
+    return isLoggedIn && isAdmin ? children : <Navigate to="/dashboard" />;
   };
 
   return (
@@ -72,6 +85,7 @@ function App() {
           isLoggedIn={isLoggedIn} 
           onLogout={handleLogout} 
           userName={userName}
+          isAdmin={isAdmin}
         />
         
         <main className="flex-grow">
@@ -106,6 +120,16 @@ function App() {
                   <ProfilePage userName={userName} />
                 </ProtectedRoute>
               } 
+            />
+
+            {/* Admin Route */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <Admin />
+                </AdminRoute>
+              }
             />
 
             {/* Redirect unknown routes to home */}
