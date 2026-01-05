@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Backend folder
+backend_disabled/
+
+# Node
+node_modules/
+.env
+.env.local
+
+# Build
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
