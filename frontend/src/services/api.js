@@ -13,7 +13,7 @@ export const api = {
     }
   },
 
-  // Example: Get users
+  //Get users
   getUsers: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/users`);
@@ -24,7 +24,7 @@ export const api = {
     }
   },
 
-  // Example: Create user
+  // Create user
   createUser: async (userData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/users`, {
